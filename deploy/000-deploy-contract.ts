@@ -7,6 +7,7 @@ module.exports = async ({ ethers, getNamedAccounts, deployments }) => {
 
     const deployResult = await deploy('ExampleToken', {
         from: deployer,
+        args: [],
         log: true,
         deterministicDeployment: false,
     });

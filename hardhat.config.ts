@@ -1,51 +1,57 @@
-import "dotenv/config"
-import "@nomiclabs/hardhat-waffle";
-import "hardhat-deploy";
-import "hardhat-deploy-ethers";
-import "hardhat-typechain";
+import 'dotenv/config'
+import '@nomiclabs/hardhat-waffle'
+import '@typechain/hardhat'
+import '@nomiclabs/hardhat-etherscan'
+import 'hardhat-deploy'
+import 'hardhat-deploy-ethers'
+import 'solidity-coverage'
 
-const accounts = {
-    mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
-}
+const accounts = [process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000"]
 
 export default {
-    defaultNetwork: "hardhat",
     namedAccounts: {
         deployer: {
             default: 0,
-        },
-        dev: {
-            default: 1,
-        },
+        }
     },
     networks: {
         hardhat: {
-        }
+            allowUnlimitedContractSize: false,
+        },
+        kovan: {
+            url: `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+            accounts,
+        },
+        coverage: {
+            url: "http://127.0.0.1:8555",
+        },
+    },
+    defaultNetwork: 'hardhat',
+    solidity: {
+        version: '0.8.0',
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 800,
+            },
+            metadata: {
+                bytecodeHash: 'none',
+            },
+        },
     },
     paths: {
-        artifacts: "artifacts",
-        cache: "cache",
-        deploy: "deploy",
-        deployments: "deployments",
-        imports: "imports",
-        sources: "contracts",
-        tests: "test",
-    },
-    solidity: {
-        compilers: [
-            {
-                version: "0.6.12",
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-        ],
+        artifacts: 'artifacts',
+        cache: 'cache',
+        deploy: 'deploy',
+        deployments: 'deployments',
+        imports: 'imports',
+        sources: 'contracts',
+        tests: 'test',
     },
     typechain: {
-        outDir: "types",
-        target: "ethers-v5",
+        outDir: 'types'
     },
-};
+    etherscan: {
+        apiKey: `${process.env.ETHERSCAN_API_KEY}`
+    }
+}

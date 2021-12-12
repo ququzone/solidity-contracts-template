@@ -1,10 +1,17 @@
-solidity-contracts-template
-===========================
+# solidity contracts template
 
-## Develop
+## Local Development
 
-```
-yarn
-yarn lint
-yarn test
-```
+The following assumes the use of `node@>=12`.
+
+### Install Dependencies
+
+`yarn`
+
+### Compile Contracts
+
+`yarn compile`
+
+### Run Tests
+
+`yarn test`
