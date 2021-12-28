@@ -1,9 +1,7 @@
-import { ethers, waffle } from "hardhat"
+import { ethers } from "hardhat"
 import { expect } from "chai"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
-const { deployContract } = waffle
 
-import ExampleTokenArtifact from "../artifacts/contracts/ExampleToken.sol/ExampleToken.json"
 import { ExampleToken } from "../types/ExampleToken"
 
 describe("ExampleToken", function () {
@@ -13,7 +11,8 @@ describe("ExampleToken", function () {
   before(async function () {
     ;[owner] = await ethers.getSigners()
 
-    token = (await deployContract(owner, ExampleTokenArtifact)) as ExampleToken
+    const facory = await ethers.getContractFactory("ExampleToken")
+    token = (await facory.connect(owner).deploy()) as ExampleToken
   })
 
   it("check basic info", async function () {
