@@ -21,8 +21,6 @@
     "eslint-plugin-prettier": "^3.4.0",
     "ethers": "^5.5.2",
     "hardhat": "^2.8.0",
-    "hardhat-deploy": "^0.9.22",
-    "hardhat-deploy-ethers": "^0.3.0-beta.12",
     "lodash": "^4.17.21",
     "prettier": "^2.3.0",
     "prettier-plugin-solidity": "^1.0.0-beta.9",
@@ -52,10 +50,11 @@
     "test:gas": "cross-env REPORT_GAS=true yarn test",
     "prepublishOnly": "yarn test",
     "coverage": "npm run compile && npx hardhat coverage --temp artifacts --network coverage",
-    "deploy:kovan": "hardhat --network kovan deploy",
+    "deploy:kovan": "hardhat --network kovan run scripts/deploy.ts",
     "verify:kovan": "hardhat --network kovan etherscan-verify"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.0.0"
+    "@openzeppelin/contracts-upgradeable": "^4.4.1",
+    "@openzeppelin/hardhat-upgrades": "^1.12.1"
   }
 }

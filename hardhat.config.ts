@@ -5,6 +5,7 @@ import '@nomiclabs/hardhat-etherscan'
 import 'hardhat-deploy'
 import 'hardhat-deploy-ethers'
 import 'solidity-coverage'
+import '@openzeppelin/hardhat-upgrades'
 
 const accounts = [process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000"]
 
@@ -22,13 +23,18 @@ export default {
             url: `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
             accounts,
         },
+        bsc_testnet: {
+            url: `https://data-seed-prebsc-1-s1.binance.org:8545/`,
+            accounts,
+            chainId: 97,
+        },
         coverage: {
             url: "http://127.0.0.1:8555",
         },
     },
     defaultNetwork: 'hardhat',
     solidity: {
-        version: '0.8.0',
+        version: '0.8.4',
         settings: {
             optimizer: {
                 enabled: true,
