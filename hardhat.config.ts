@@ -1,10 +1,19 @@
-import 'dotenv/config'
-import '@nomiclabs/hardhat-waffle'
 import '@typechain/hardhat'
+import '@nomiclabs/hardhat-ethers'
+import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-etherscan'
 import 'hardhat-deploy'
-import 'hardhat-deploy-ethers'
 import 'solidity-coverage'
+import 'hardhat-gas-reporter'
+import 'hardhat-contract-sizer'
+
+const MAINNET_RPC_URL =
+    process.env.MAINNET_RPC_URL ||
+    process.env.ALCHEMY_MAINNET_RPC_URL ||
+    "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
+const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER
+const PRIVATE_KEY = process.env.PRIVATE_KEY
+const REPORT_GAS = process.env.REPORT_GAS || false
 
 const accounts = [process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000"]
 
@@ -14,21 +23,28 @@ export default {
             default: 0,
         }
     },
+    defaultNetwork: 'hardhat',
     networks: {
         hardhat: {
-            allowUnlimitedContractSize: false,
+            forking: {
+                url: MAINNET_RPC_URL,
+                blockNumber: FORKING_BLOCK_NUMBER,
+                enabled: false,
+            },
         },
         kovan: {
             url: `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
             accounts,
         },
-        coverage: {
-            url: "http://127.0.0.1:8555",
+        mainnet: {
+            url: MAINNET_RPC_URL,
+            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+            saveDeployments: true,
+            chainId: 1,
         },
     },
-    defaultNetwork: 'hardhat',
     solidity: {
-        version: '0.8.0',
+        version: '0.8.7',
         settings: {
             optimizer: {
                 enabled: true,
@@ -38,6 +54,9 @@ export default {
                 bytecodeHash: 'none',
             },
         },
+    },
+    mocha: {
+        timeout: 200000,
     },
     paths: {
         artifacts: 'artifacts',
@@ -53,5 +72,15 @@ export default {
     },
     etherscan: {
         apiKey: `${process.env.ETHERSCAN_API_KEY}`
-    }
+    },
+    gasReporter: {
+        enabled: REPORT_GAS,
+        currency: "USD",
+        outputFile: "gas-report.txt",
+        noColors: true,
+    },
+    contractSizer: {
+        runOnCompile: false,
+        only: ["ExampleToken"],
+    },
 }
