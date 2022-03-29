@@ -6,6 +6,7 @@ import "hardhat-deploy"
 import "solidity-coverage"
 import "hardhat-gas-reporter"
 import "hardhat-contract-sizer"
+import "dotenv/config"
 
 const MAINNET_RPC_URL =
   process.env.MAINNET_RPC_URL ||
