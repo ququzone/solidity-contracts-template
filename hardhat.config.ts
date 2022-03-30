@@ -12,7 +12,7 @@ const MAINNET_RPC_URL =
   process.env.MAINNET_RPC_URL ||
   process.env.ALCHEMY_MAINNET_RPC_URL ||
   "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
-const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER
+const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER || "0"
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 const REPORT_GAS = process.env.REPORT_GAS || false
 
@@ -31,7 +31,7 @@ export default {
     hardhat: {
       forking: {
         url: MAINNET_RPC_URL,
-        blockNumber: FORKING_BLOCK_NUMBER,
+        blockNumber: Number(FORKING_BLOCK_NUMBER),
         enabled: false,
       },
     },
