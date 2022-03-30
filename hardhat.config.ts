@@ -41,7 +41,7 @@ export default {
     },
     mainnet: {
       url: MAINNET_RPC_URL,
-      accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+      accounts: accounts,
       saveDeployments: true,
       chainId: 1,
     },
