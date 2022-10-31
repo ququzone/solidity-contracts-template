@@ -21,6 +21,11 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY
 const MNEMONIC = process.env.MNEMONIC || "Your mnemonic"
 const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER
 
+const accounts = PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : []
+// const accounts = {
+//     mnemonic: MNEMONIC,
+// }
+
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     networks: {
@@ -39,19 +44,13 @@ const config: HardhatUserConfig = {
         },
         goerli: {
             url: GOERLI_RPC_URL,
-            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            //   accounts: {
-            //     mnemonic: MNEMONIC,
-            //   },
+            accounts: accounts,
             saveDeployments: true,
             chainId: 5,
         },
         mainnet: {
             url: MAINNET_RPC_URL,
-            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            //   accounts: {
-            //     mnemonic: MNEMONIC,
-            //   },
+            accounts: accounts,
             saveDeployments: true,
             chainId: 1,
         },
