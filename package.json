@@ -2,6 +2,9 @@
     "name": "@ququzone/solidity-contracts-template",
     "version": "0.1.0",
     "license": "MIT",
+    "engines": {
+        "node": "^14.0.0 || ^16.0.0 || ^18.0.0"
+    },
     "scripts": {
         "clean": "rm -rf artifacts && rm -rf cache && rm -rf typechain",
         "compile": "hardhat compile",
