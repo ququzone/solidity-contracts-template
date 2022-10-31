@@ -1,89 +1,85 @@
-import "@typechain/hardhat"
-import "@nomiclabs/hardhat-ethers"
-import "@nomiclabs/hardhat-waffle"
-import "@nomiclabs/hardhat-etherscan"
+import * as dotenv from "dotenv"
+
+import type { HardhatUserConfig } from "hardhat/config"
+import "@nomicfoundation/hardhat-toolbox"
+import "@nomicfoundation/hardhat-chai-matchers"
 import "hardhat-deploy"
-import "solidity-coverage"
-import "hardhat-gas-reporter"
 import "hardhat-contract-sizer"
-import "dotenv/config"
+import "./tasks"
+
+dotenv.config()
 
 const MAINNET_RPC_URL =
-  process.env.MAINNET_RPC_URL ||
-  process.env.ALCHEMY_MAINNET_RPC_URL ||
-  "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
-const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER || "0"
+    process.env.MAINNET_RPC_URL ||
+    process.env.ALCHEMY_MAINNET_RPC_URL ||
+    "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
+
 const PRIVATE_KEY = process.env.PRIVATE_KEY
-const REPORT_GAS = process.env.REPORT_GAS || false
+// optional
+const MNEMONIC = process.env.MNEMONIC || "Your mnemonic"
+const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER
 
-const accounts = [
-  process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000",
-]
+const accounts = [PRIVATE_KEY!]
+// accounts: {
+//     mnemonic: MNEMONIC,
+// },
 
-export default {
-  namedAccounts: {
-    deployer: {
-      default: 0,
+const config: HardhatUserConfig = {
+    defaultNetwork: "hardhat",
+    networks: {
+        hardhat: {
+            hardfork: "merge",
+            // If you want to do some forking set `enabled` to true
+            forking: {
+                url: MAINNET_RPC_URL,
+                blockNumber: Number(FORKING_BLOCK_NUMBER),
+                enabled: false,
+            },
+            chainId: 31337,
+        },
+        localhost: {
+            chainId: 31337,
+        },
     },
-  },
-  defaultNetwork: "hardhat",
-  networks: {
-    hardhat: {
-      forking: {
-        url: MAINNET_RPC_URL,
-        blockNumber: Number(FORKING_BLOCK_NUMBER),
-        enabled: false,
-      },
+    gasReporter: {
+        enabled: process.env.REPORT_GAS === "true",
+        currency: "USD",
+        outputFile: "gas-report.txt",
+        noColors: true,
     },
-    kovan: {
-      url: `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-      accounts,
+    contractSizer: {
+        runOnCompile: false,
+        only: ["DIDRegistry"],
     },
-    mainnet: {
-      url: MAINNET_RPC_URL,
-      accounts: accounts,
-      saveDeployments: true,
-      chainId: 1,
+    namedAccounts: {
+        deployer: {
+            default: 0,
+            1: 0,
+        },
+        admin: {
+            default: 1,
+        },
     },
-  },
-  solidity: {
-    version: "0.8.7",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 800,
-      },
-      metadata: {
-        bytecodeHash: "none",
-      },
+    solidity: {
+        compilers: [
+            {
+                version: "0.8.17",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 10000,
+                    },
+                },
+            },
+        ],
     },
-  },
-  mocha: {
-    timeout: 200000,
-  },
-  paths: {
-    artifacts: "artifacts",
-    cache: "cache",
-    deploy: "deploy",
-    deployments: "deployments",
-    imports: "imports",
-    sources: "contracts",
-    tests: "test",
-  },
-  typechain: {
-    outDir: "types",
-  },
-  etherscan: {
-    apiKey: `${process.env.ETHERSCAN_API_KEY}`,
-  },
-  gasReporter: {
-    enabled: REPORT_GAS,
-    currency: "USD",
-    outputFile: "gas-report.txt",
-    noColors: true,
-  },
-  contractSizer: {
-    runOnCompile: false,
-    only: ["ExampleToken"],
-  },
+    mocha: {
+        timeout: 200000, // 200 seconds max for running tests
+    },
+    typechain: {
+        outDir: "typechain",
+        target: "ethers-v5",
+    },
 }
+
+export default config
