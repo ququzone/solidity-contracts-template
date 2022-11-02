@@ -6,10 +6,16 @@ async function main() {
 
     const recipient = deployer
 
-    const executeResult = await execute("ExampleToken", {
-        from: deployer,
-        log: true,
-    }, "transfer", recipient, 100)
+    const executeResult = await execute(
+        "ExampleToken",
+        {
+            from: deployer,
+            log: true,
+        },
+        "transfer",
+        recipient,
+        100
+    )
 
     console.log(
         `ExampleToken transfer ${recipient} using ${executeResult.gasUsed} gas at ${executeResult.transactionHash}`

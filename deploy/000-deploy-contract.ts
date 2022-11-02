@@ -11,7 +11,7 @@ module.exports = async ({ ethers, getNamedAccounts, deployments }) => {
     })
     if (deployResult.newlyDeployed) {
         log(
-        `contract ExampleToken deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`
+            `contract ExampleToken deployed at ${deployResult.address} using ${deployResult.receipt.gasUsed} gas`
         )
     }
 }
