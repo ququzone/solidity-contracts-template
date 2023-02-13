@@ -8,6 +8,6 @@
         "skipLibCheck": true
     },
     "exclude": ["dist", "node_modules"],
-    "include": ["./scripts", "./test", "./src"],
+    "include": ["./scripts", "./test", "./src", "script/transer.ts"],
     "files": ["./hardhat.config.ts"]
 }

@@ -1,6 +1,7 @@
 import { ethers } from "hardhat"
 import { expect } from "chai"
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import { ExampleToken } from "../typechain"
 
 describe("ExampleToken", function () {
     let token: ExampleToken
