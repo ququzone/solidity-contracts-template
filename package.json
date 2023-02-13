@@ -6,7 +6,7 @@
         "node": "^14.0.0 || ^16.0.0 || ^18.0.0"
     },
     "scripts": {
-        "clean": "rm -rf artifacts && rm -rf cache && rm -rf typechain",
+        "clean": "rm -rf artifacts && rm -rf cache* && rm -rf typechain && rm -rf out",
         "compile": "hardhat compile",
         "test": "hardhat test ./test/*.spec.ts --network hardhat",
         "lint": "prettier --check .",
