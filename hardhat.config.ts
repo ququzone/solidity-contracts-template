@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv"
 import fs from "fs"
 import type { HardhatUserConfig } from "hardhat/config"
-import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-toolbox"
 import "./tasks"
 
 dotenv.config()

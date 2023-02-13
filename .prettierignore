@@ -11,3 +11,6 @@ README.md
 coverage.json
 deployments
 typechain
+/out
+/lib
+/cache_hardhat
