@@ -1,79 +1,21 @@
 import * as dotenv from "dotenv"
-
+import fs from "fs"
 import type { HardhatUserConfig } from "hardhat/config"
-import "@nomicfoundation/hardhat-toolbox"
-import "@nomicfoundation/hardhat-chai-matchers"
-import "hardhat-deploy"
-import "hardhat-contract-sizer"
+import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-preprocessor"
 import "./tasks"
 
 dotenv.config()
 
-const MAINNET_RPC_URL =
-    process.env.MAINNET_RPC_URL ||
-    process.env.ALCHEMY_MAINNET_RPC_URL ||
-    "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
-const GOERLI_RPC_URL =
-    process.env.GOERLI_RPC_URL || "https://eth-goerli.alchemyapi.io/v2/your-api-key"
-
-const PRIVATE_KEY = process.env.PRIVATE_KEY
-// optional
-const MNEMONIC = process.env.MNEMONIC || "Your mnemonic"
-const FORKING_BLOCK_NUMBER = process.env.FORKING_BLOCK_NUMBER
-
-const accounts = PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : []
-// const accounts = {
-//     mnemonic: MNEMONIC,
-// }
+function getRemappings() {
+    return fs
+        .readFileSync("remappings.txt", "utf8")
+        .split("\n")
+        .filter(Boolean)
+        .map((line) => line.trim().split("="))
+}
 
 const config: HardhatUserConfig = {
-    defaultNetwork: "hardhat",
-    networks: {
-        hardhat: {
-            hardfork: "merge",
-            // If you want to do some forking set `enabled` to true
-            forking: {
-                url: MAINNET_RPC_URL,
-                blockNumber: Number(FORKING_BLOCK_NUMBER),
-                enabled: false,
-            },
-            chainId: 31337,
-        },
-        localhost: {
-            chainId: 31337,
-        },
-        goerli: {
-            url: GOERLI_RPC_URL,
-            accounts: accounts,
-            saveDeployments: true,
-            chainId: 5,
-        },
-        mainnet: {
-            url: MAINNET_RPC_URL,
-            accounts: accounts,
-            saveDeployments: true,
-            chainId: 1,
-        },
-    },
-    gasReporter: {
-        enabled: process.env.REPORT_GAS === "true",
-        currency: "USD",
-        outputFile: "gas-report.txt",
-        noColors: true,
-    },
-    contractSizer: {
-        runOnCompile: false,
-        only: ["DIDRegistry"],
-    },
-    namedAccounts: {
-        deployer: {
-            default: 0,
-            1: 0,
-        },
-        admin: {
-            default: 1,
-        },
-    },
     solidity: {
         compilers: [
             {
@@ -87,12 +29,28 @@ const config: HardhatUserConfig = {
             },
         ],
     },
+    paths: {
+        sources: "./src", // Use ./src rather than ./contracts as Hardhat expects
+        cache: "./cache_hardhat", // Use a different cache for Hardhat than Foundry
+    },
+    // This fully resolves paths for imports in the ./lib directory for Hardhat
+    // @ts-ignore
+    preprocess: {
+        eachLine: () => ({
+            transform: (line: string) => {
+                if (line.match(/^\s*import /i)) {
+                    getRemappings().forEach(([find, replace]) => {
+                        if (line.match(find)) {
+                            line = line.replace(find, replace)
+                        }
+                    })
+                }
+                return line
+            },
+        }),
+    },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests
-    },
-    typechain: {
-        outDir: "typechain",
-        target: "ethers-v5",
     },
 }
 
