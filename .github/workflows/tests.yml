@@ -11,7 +11,7 @@ env:
 
 jobs:
   hardhat:
-    name: Unit Tests
+    name: Hardhat Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -43,12 +43,27 @@ jobs:
     strategy:
       fail-fast: true
 
-    name: Foundry project
+    name: Foundry Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
