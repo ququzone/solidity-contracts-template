@@ -6,9 +6,11 @@
         "node": "^14.0.0 || ^16.0.0 || ^18.0.0"
     },
     "scripts": {
-        "clean": "rm -rf artifacts && rm -rf cache* && rm -rf typechain && rm -rf out",
+        "clean": "rimraf ./artifacts ./cache ./cache_hardhat ./out",
         "compile": "hardhat compile",
-        "test": "hardhat test ./test/*.spec.ts --network hardhat",
+        "test:hardhat": "hardhat test ./test/*.spec.ts --network hardhat",
+        "test:foundry": "forge test -vvv",
+        "test": "npm run test:hardhat && npm run test:foundry",
         "lint": "prettier --check .",
         "lint:fix": "prettier --write ."
     },
